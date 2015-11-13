@@ -1,0 +1,13 @@
+L is oversampling ratio
+n is # observations
+we want MSE
+add the quantizer
+compare to pure quantizer
+have SNR in dB
+modulo and quantize
+
+to do D
+squareroot 12 d equals the size of the quantization cell
+
+and the size of the quantization cell is just the total space over 2^numbits in the quantizer
+ok and then after we have this we can add the modulo 
