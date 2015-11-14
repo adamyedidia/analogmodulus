@@ -41,6 +41,15 @@ def convertBitsToNumber(bits):
 
 def quantize(x, numBits):
     return convertBitsToNumber(convertNumberToBits(x, numBits))        
+
+def mod2OnLowInterval(x):
+    return ((x+1)%2)-1
+    
+def mod1OnLowInterval(x):
+    return ((x+0.5)%1)-0.5
+    
+def modHalfOnLowInterval(x):
+    return ((x+0.25)%0.5)-0.25
         
 P = 100
 
@@ -67,7 +76,8 @@ transformedWaveform = np.fft.fft([x for x in waveform])
 #    indexedTransform.append((index, transformedWaveform[counter]))
 #    counter += 1
 
-prunedTransform = [val*((float(i) < n/2.) or (float(i) > numSamples - n/2.)) for i, val in enumerate(transformedWaveform)]
+prunedTransform = [val*((float(i) < n/2.) or (float(i) > numSamples - n/2.)) \
+    for i, val in enumerate(transformedWaveform)]
         
 #p.plot(range(-int(numSamples/2), int(numSamples/2)), prunedTransform, "b-")
 
@@ -93,6 +103,17 @@ scaledUpWaveform = [x*sqrt(L) for x in returnedWaveform]
 var = variance(scaledUpWaveform)
 print "var", var
 #print variance([x[1] for x in waveform])
+
+moddedWaveform = [mod2OnLowInterval(np.real(x)) for x in scaledUpWaveform]
+
+#moddedWaveform = scaledUpWaveform
+
+quantizedWaveform = [quantize(x, 4) for x in moddedWaveform]
+
+#quantizedWaveform = moddedWaveform
+
+p.plot(range(numSamples+1), quantizedWaveform, "b-")
+p.show()
 
 for i in range(P, numSamples):
     pPreviousSamples = returnedWaveform[i-P:i]
